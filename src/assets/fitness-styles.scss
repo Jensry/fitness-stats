@@ -1,0 +1,7 @@
+@import "~bulma/sass/utilities/initial-variables";
+@import "~bulma/sass/utilities/functions";
+
+$primary: #00de94;
+$primary-invert: findColorInvert($primary);
+
+@import "~bulma";
