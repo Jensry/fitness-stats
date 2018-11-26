@@ -2,7 +2,7 @@
   <div id="app">
     <div class="container">
       <router-link to="/" class="logo">
-        <img alt="Vue logo" src="./assets/logo.png">
+        <img alt="Fitness stats logo" src="./assets/fitness-stats-logo.png">
       </router-link>
       <router-view></router-view>
     </div>
@@ -20,11 +20,9 @@ export default {
 @import "assets/fitness-styles";
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: 60px;
+  padding-top: 40px;
 }
 
 .logo {
@@ -33,4 +31,5 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
+
 </style>
