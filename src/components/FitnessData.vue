@@ -27,15 +27,20 @@
         </div>
       </div>
     </div>
-    <pre>{{ JSON.stringify(weekData, null, 2) }}</pre>
+    <hr>
+    <aggregated-data :buckets="weekData.bucket"></aggregated-data>
   </div>
 </template>
 
 <script>
 import fitnessService from '@/services/fitnessService';
+import AggregatedData from '@/components/AggregatedData';
 
 export default {
   name: 'FitnessData',
+  components: {
+    AggregatedData,
+  },
   props: {
     msg: String
   },
