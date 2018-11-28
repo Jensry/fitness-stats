@@ -8,7 +8,7 @@
       <tbody>
         <tr v-for="bucket in buckets" v-bind:key="bucket.startTimeMillis">
           <td>{{ toDateString(bucket.startTimeMillis) }}</td>
-          <td v-for="value in getValues(bucket)" :key="value">
+          <td v-for="(value, index) in getValues(bucket)" :key="index">
             {{ getPrintableValue(value) }}
           </td>
         </tr>
