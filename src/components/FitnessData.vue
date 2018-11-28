@@ -27,14 +27,32 @@
         </div>
       </div>
     </div>
+    <div class="field">
+      <label class="label">Aggregate by</label>
+      <div class="control">
+        <div class="select">
+          <select v-model="selectedTimeUnit" required>
+            <option v-for="(value, key) in getTimeUnits()" :key="key" :value="key">
+              {{ value }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
     <hr>
-    <aggregated-data :buckets="weekData.bucket"></aggregated-data>
+    <aggregated-data v-if="data.bucket" :buckets="data.bucket"></aggregated-data>
   </div>
 </template>
 
 <script>
 import fitnessService from '@/services/fitnessService';
 import AggregatedData from '@/components/AggregatedData';
+
+const TIME_UNITS = {
+  day: 'Day',
+  week: 'Week',
+  month: 'Month',
+}
 
 export default {
   name: 'FitnessData',
@@ -49,7 +67,8 @@ export default {
       dataSources: '',
       selectedDataType: '',
       selectedDataSource: '',
-      weekData: '',
+      selectedTimeUnit: 'day',
+      data: {},
     }
   },
   async created() {
@@ -66,12 +85,22 @@ export default {
         return this.dataSources.filter(dataSource => dataSource.dataType.name === this.selectedDataType).map(dataSource => dataSource.dataStreamId);
       }
     },
+    getTimeUnits() {
+      return TIME_UNITS;
+    },
+    async fetchData() {
+      if (this.selectedDataSource) {
+        this.data = await fitnessService.getData(this.selectedDataSource, this.selectedTimeUnit);
+      }
+    }
   },
   watch: {
     async selectedDataSource() {
-      this.weekData = 'Fetching data...'
-      if (this.selectedDataSource) {
-        this.weekData = await fitnessService.getData(this.selectedDataSource);
+      this.fetchData();
+    },
+    async selectedTimeUnit() {
+      if (this.selectedDataType && this.selectedDataSource) {
+        this.fetchData();
       }
     }
   }

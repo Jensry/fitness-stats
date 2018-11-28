@@ -6,7 +6,7 @@
         <td>Date</td>
       </thead>
       <tbody>
-        <tr v-for="bucket in buckets" v-bind:key="bucket.startTimeMillis">
+        <tr v-for="bucket in bucketsReversed" v-bind:key="bucket.startTimeMillis">
           <td>{{ toDateString(bucket.startTimeMillis) }}</td>
           <td v-for="(value, index) in getValues(bucket)" :key="index">
             {{ getPrintableValue(value) }}
@@ -25,6 +25,11 @@ export default {
   name: 'AggregratedData',
   props: {
     buckets: Array
+  },
+  computed: {
+    bucketsReversed() {
+      return this.buckets.slice().reverse();
+    }
   },
   methods: {
     getValues(bucket) {
@@ -49,7 +54,7 @@ export default {
       //return (new Date(Number(timestamp))).toDateString()
       return (new Date(Number(timestamp))).toLocaleDateString('sv-SE');
     }
-  }
+  },
 }
 </script>
 

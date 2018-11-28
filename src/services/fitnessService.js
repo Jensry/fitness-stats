@@ -2,8 +2,6 @@ import axios from 'axios';
 
 const DATA_SOURCES_ENDPOINT = 'https://www.googleapis.com/fitness/v1/users/me/dataSources';
 const DATASET_AGGREGATE_ENDPOINT = 'https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate';
-const ONE_DAY_IN_MILLIS = 86400000;
-const ONE_WEEK_IN_MILLIS = 7 * 86400000;
 
 function getStartOfDay(timestamp) {
   const date = new Date(timestamp);
@@ -12,6 +10,10 @@ function getStartOfDay(timestamp) {
   date.setSeconds(0);
   date.setMilliseconds(0);
   return date;
+}
+
+function twoMonthAgo() {
+  return new Date().setMonth(new Date().getMonth() - 2);
 }
 
 export default {
@@ -29,7 +31,7 @@ export default {
       return e;
     }
   },
-  async getData(dataSourceId) {
+  async getData(dataSourceId, timeUnit) {
     try {
       const response = await axios.request({
         method: 'post',
@@ -41,10 +43,15 @@ export default {
           aggregateBy: [{
             'dataSourceId': dataSourceId,
           }],
-          bucketByTime: { durationMillis: ONE_DAY_IN_MILLIS },
-          startTimeMillis: getStartOfDay(Date.now() - ONE_WEEK_IN_MILLIS).getTime(),
+          bucketByTime: {
+            period: {
+              type: timeUnit,
+              value: 1,
+              timeZoneId: 'CET',
+            },
+          },
+          startTimeMillis: getStartOfDay(twoMonthAgo()).getTime(),
           endTimeMillis: Date.now(),
-        
         }
       });
       return response.data;
