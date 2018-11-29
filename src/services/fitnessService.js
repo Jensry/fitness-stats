@@ -31,7 +31,7 @@ export default {
       return e;
     }
   },
-  async getData(dataSourceId, timeUnit) {
+  async getAggregatedData(dataSourceId, timeUnit) {
     try {
       const response = await axios.request({
         method: 'post',
@@ -59,4 +59,18 @@ export default {
       return e;
     }
   },
+  async getSessions() {
+    try {
+      const response = await axios.request({
+        method: 'get',
+        url: 'https://www.googleapis.com/fitness/v1/users/me/sessions?startTime=2018-11-01T00:00:00.000Z&endTime=2018-11-28T23:59:59.999Z',
+        headers: {
+          Authorization: `Bearer ${localStorage.accessToken}`,
+        },
+      });
+      return response;
+    } catch (e) {
+      return e;
+    }
+  }
 };

@@ -41,11 +41,12 @@
     </div>
     <hr>
     <aggregated-data v-if="data.bucket" :buckets="data.bucket"></aggregated-data>
+    <!--pre>{{ JSON.stringify(sessions, null, 2) }}</pre-->
   </div>
 </template>
 
 <script>
-import fitnessData from '@/utils/fitnessData';
+import fitnessHelper from '@/utils/fitnessHelper';
 import fitnessService from '@/services/fitnessService';
 import AggregatedData from '@/components/AggregatedData';
 
@@ -70,14 +71,16 @@ export default {
       selectedDataSource: '',
       selectedTimeUnit: 'day',
       data: {},
+      sessions: {},
     }
   },
   async created() {
     this.dataSources = await fitnessService.getDataSources();
+    this.fetchSessions();
   },
   methods: {
     mapToDisplayName(dataType) {
-      return fitnessData.dataTypes[dataType] ? fitnessData.dataTypes[dataType].name : dataType.replace('com.google.', '')
+      return fitnessHelper.dataTypes[dataType] ? fitnessHelper.dataTypes[dataType].name : dataType.replace('com.google.', '')
     },
     getDataTypes() {
       if (this.dataSources) {
@@ -89,8 +92,11 @@ export default {
     },
     async fetchData() {
       if (this.selectedDataSource) {
-        this.data = await fitnessService.getData(this.selectedDataSource, this.selectedTimeUnit);
+        this.data = await fitnessService.getAggregatedData(this.selectedDataSource, this.selectedTimeUnit);
       }
+    },
+    async fetchSessions() {
+      this.sessions = await fitnessService.getSessions();
     }
   },
   computed: {
