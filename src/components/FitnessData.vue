@@ -7,8 +7,8 @@
         <div class="select">
           <select v-model="selectedDataType" required>
             <option value="">Choose data type...</option>
-            <option v-for="dataType in getDataTypes()" v-bind:key="dataType">
-              {{ dataType }}
+            <option v-for="dataType in getDataTypes()" :key="dataType" :value="dataType">
+              {{ mapToDisplayName(dataType) }}
             </option>
           </select>
         </div>
@@ -20,7 +20,7 @@
         <div class="select">
           <select v-model="selectedDataSource" required>
             <option value="">Choose data source...</option>
-            <option v-for="dataSource in getDataSources()" v-bind:key="dataSource">
+            <option v-for="dataSource in selectableDataSources" :key="dataSource">
               {{ dataSource }}
             </option>
           </select>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import fitnessData from '@/utils/fitnessData';
 import fitnessService from '@/services/fitnessService';
 import AggregatedData from '@/components/AggregatedData';
 
@@ -75,14 +76,12 @@ export default {
     this.dataSources = await fitnessService.getDataSources();
   },
   methods: {
+    mapToDisplayName(dataType) {
+      return fitnessData.dataTypes[dataType] ? fitnessData.dataTypes[dataType].name : dataType.replace('com.google.', '')
+    },
     getDataTypes() {
       if (this.dataSources) {
         return [...new Set(this.dataSources.map(dataSource => dataSource.dataType.name))];
-      }
-    },
-    getDataSources() {
-      if (this.dataSources) {
-        return this.dataSources.filter(dataSource => dataSource.dataType.name === this.selectedDataType).map(dataSource => dataSource.dataStreamId);
       }
     },
     getTimeUnits() {
@@ -93,6 +92,13 @@ export default {
         this.data = await fitnessService.getData(this.selectedDataSource, this.selectedTimeUnit);
       }
     }
+  },
+  computed: {
+    selectableDataSources() {
+      if (this.dataSources) {
+        return this.dataSources.filter(dataSource => dataSource.dataType.name === this.selectedDataType).map(dataSource => dataSource.dataStreamId);
+      }
+    },
   },
   watch: {
     async selectedDataSource() {
@@ -108,7 +114,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  pre {
-    text-align: left;
-  }
 </style>

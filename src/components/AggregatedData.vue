@@ -60,7 +60,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  pre {
-    text-align: left;
-  }
 </style>
