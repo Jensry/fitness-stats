@@ -1,11 +1,13 @@
 <template>
   <div id="app">
-    <div class="container">
-      <router-link to="/" class="logo">
-        <img alt="Fitness stats logo" src="./assets/fitness-stats-logo.png">
-      </router-link>
-      <router-view></router-view>
-    </div>
+    <section class="section">
+      <div class="container">
+        <router-link to="/" class="logo">
+          <img alt="Fitness stats logo" src="./assets/fitness-stats-logo.png">
+        </router-link>
+        <router-view></router-view>
+      </div>
+    </section>
   </div>
 </template>
 
