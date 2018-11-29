@@ -6,7 +6,7 @@
         <td>Date</td>
       </thead>
       <tbody>
-        <tr v-for="bucket in bucketsReversed" v-bind:key="bucket.startTimeMillis">
+        <tr v-for="bucket in filteredBuckets" v-bind:key="bucket.startTimeMillis">
           <td>{{ toDateString(bucket.startTimeMillis) }}</td>
           <td v-for="(value, index) in getValues(bucket)" :key="index">
             {{ getPrintableValue(value) }}
@@ -27,8 +27,9 @@ export default {
     buckets: Array
   },
   computed: {
-    bucketsReversed() {
-      return this.buckets.slice().reverse();
+    filteredBuckets() {
+      const reversedBuckets = this.buckets.slice().reverse();
+      return reversedBuckets.filter(bucket => bucket.dataset[0].point.length > 0);
     }
   },
   methods: {
