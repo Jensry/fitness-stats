@@ -15,7 +15,7 @@
       </tbody>
     </table>
     <h5 class="title is-5">Raw data</h5>
-    <pre>{{ JSON.stringify(buckets, null, 2) }}</pre>
+    <!--pre>{{ JSON.stringify(buckets, null, 2) }}</pre-->
   </div>
 </template>
 

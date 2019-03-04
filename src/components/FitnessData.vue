@@ -40,8 +40,13 @@
       </div>
     </div>
     <hr>
+    <div class="chart">
+      <chart v-if="data.bucket" :buckets="data.bucket"></chart>
+    </div>
     <aggregated-data v-if="data.bucket" :buckets="data.bucket"></aggregated-data>
+    
     <!--pre>{{ JSON.stringify(sessions, null, 2) }}</pre-->
+    <pre>{{ JSON.stringify(datasets, null, 2) }}</pre>
   </div>
 </template>
 
@@ -49,17 +54,54 @@
 import fitnessHelper from '@/utils/fitnessHelper';
 import fitnessService from '@/services/fitnessService';
 import AggregatedData from '@/components/AggregatedData';
+import Chart from '@/components/Chart';
 
 const TIME_UNITS = {
   day: 'Day',
   week: 'Week',
   month: 'Month',
-}
+};
+
+const testChartData = {
+  labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+  datasets: [{
+    label: '# of Votes',
+    data: [12, 19, 3, 5, 2, 3],
+    /*backgroundColor: [
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(255, 206, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(255, 159, 64, 0.2)'
+    ],
+    borderColor: [
+      'rgba(255,99,132,1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(255, 206, 86, 1)',
+      'rgba(75, 192, 192, 1)',
+      'rgba(153, 102, 255, 1)',
+      'rgba(255, 159, 64, 1)'
+    ],*/
+    borderWidth: 1
+  }]
+};
+
+const testOptions = {
+  scales: {
+    yAxes: [{
+      ticks: {
+        beginAtZero:true
+      }
+    }]
+  }
+};
 
 export default {
   name: 'FitnessData',
   components: {
     AggregatedData,
+    Chart,
   },
   props: {
     msg: String
@@ -72,6 +114,9 @@ export default {
       selectedTimeUnit: 'day',
       data: {},
       sessions: {},
+      datasets: {},
+      chartData: testChartData,
+      chartOptions: testOptions,
     }
   },
   async created() {
@@ -93,6 +138,7 @@ export default {
     async fetchData() {
       if (this.selectedDataSource) {
         this.data = await fitnessService.getAggregatedData(this.selectedDataSource, this.selectedTimeUnit);
+        this.datasets = await fitnessService.getDatasets(this.selectedDataSource);
       }
     },
     async fetchSessions() {
@@ -120,4 +166,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.chart {
+  max-width: 500px;
+}
 </style>

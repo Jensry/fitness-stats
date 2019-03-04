@@ -68,9 +68,25 @@ export default {
           Authorization: `Bearer ${localStorage.accessToken}`,
         },
       });
+      return response.data;
+    } catch (e) {
+      return e;
+    }
+  },
+  async getDatasets(dataSourceId, startTime = new Date(), endTime = getStartOfDay(Date.now())) {
+    try {
+      const response = await axios.request({
+        method: 'get',
+        url: `https://www.googleapis.com/fitness/v1/users/me/dataSources/${dataSourceId}/datasets/${startTime.getTime() * 1000}-${endTime.getTime() * 1000}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.accessToken}`,
+        },
+      });
       return response;
     } catch (e) {
       return e;
     }
-  }
+  },
+
+  
 };
